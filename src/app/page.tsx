@@ -85,6 +85,8 @@ const medicalClinicSchema = {
   image: `${SITE_URL}/images/main/b.webp`,
   logo: `${SITE_URL}/images/logo.webp`,
   url: SITE_URL,
+  datePublished: '2026-01-25',
+  dateModified: '2026-02-25',
   telephone: '+886-3-564-7999',
   priceRange: '$$', 
   address: {
@@ -131,8 +133,46 @@ const medicalClinicSchema = {
     medicalSpecialty: [
       'Physical Medicine and Rehabilitation',
       'SportsMedicine'
-    ]
-  },
+    ],
+ 
+  'sameAs': [
+    'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+    'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+    'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
+  ],
+  // 專業證照 (Credentials)：GEO (AI 搜尋) 判斷可信度的鐵證
+  'hasCredential': [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      'name': '醫事人員執業資格',
+      'credentialCategory': '醫師證書',
+      'url': 'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+      'recognizedBy': {
+        '@type': 'Organization',
+        'name': '中華民國衛生福利部'
+      }
+    },
+    {
+      '@type': 'EducationalOccupationalCredential',
+      'name': '復健科專科醫師資格',
+      'credentialCategory': '復健科專科醫師證書',
+      'url': 'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+      'recognizedBy': {
+        '@type': 'Organization',
+        'name': '台灣復健醫學會'
+      }
+    },
+    {
+      '@type': 'EducationalOccupationalCredential',
+      'name': '骨質疏鬆症學會專科醫師資格',
+      'credentialCategory': '骨質疏鬆症學會專科醫師證書',
+      'url': 'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a=',
+      'recognizedBy': {
+        '@type': 'Organization',
+        'name': '中華民國骨質疏鬆症學會'
+      }
+    }
+  ],
 
   "hasMap": "https://www.google.com/maps/search/?api=1&query=宸新復健科診所",
   "areaServed": [
@@ -165,7 +205,7 @@ const medicalClinicSchema = {
       "@type": "AdministrativeArea",
       "name": "新竹縣"
     }
-  ],
+  ] },
 
   aggregateRating: {
     '@type': 'AggregateRating',

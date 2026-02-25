@@ -53,60 +53,36 @@ export default function DoctorsPage() {
 
   const jsonLdPhysicianPage = {
     '@context': 'https://schema.org',
+    // 核心類型：標註這是一個專業的醫療網頁
     '@type': 'MedicalWebPage',
     '@id': `${currentUrl}#webpage`,
-    name: '林羿辰醫師介紹',
-    description: '台大雙專科院長林羿辰醫師詳細資歷與專長介紹。',
-    url: currentUrl,
-    author: {
-        '@type': 'MedicalOrganization',
-        name: '新竹宸新復健科',
-        url: SITE_URL
-    },
-    mainEntity: {
+    'url': currentUrl,
+    'name': '林羿辰 醫師介紹 | 宸新復健科診所院長',
+    'description': '新竹宸新復健科院長林羿辰醫師，台大雙專科背景，專精復健醫學、骨質疏鬆症、超音波導引 PRP 注射與各種運動傷害精準治療。',
+    datePublished: '2026-01-25',
+    dateModified: '2026-02-25',
+    // 1. 作者區塊 (Author)：醫療 SEO 的權威核心
+    // 強烈建議使用「醫師個人」作為作者，而非診所
+    'author': {
       '@type': 'Physician',
-      name: '林羿辰',
-      jobTitle: '院長',
-      image: `${SITE_URL}/images/doctor/c.webp`, 
-      url: currentUrl,
-      description: '台大醫學系畢業，具備復健科專科與骨鬆雙專科醫師資歷。專精超音波導引PRP注射與運動傷害治療。',
-      telephone: '+886-3-564-7999', 
-      priceRange: '$$', 
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '東區光復路一段371號B1',
-        addressLocality: '新竹市',
-        addressRegion: 'TW',
-        postalCode: '300'
+      'name': '林羿辰 醫師',
+      'jobTitle': '院長',
+      'url': `${SITE_URL}/about/doctors`,
+      'image': `${SITE_URL}/images/main/a.webp`,
+      'gender': 'Male',
+      // 學歷背景：強化 EEAT
+      'alumniOf': {
+        '@type': 'EducationalOrganization',
+        'name': '國立台灣大學醫學系'
       },
-      worksFor: {
-        '@type': 'MedicalClinic',
-        name: '宸新復健科診所',
-        url: SITE_URL,
-        address: {
-            '@type': 'PostalAddress',
-            streetAddress: '東區光復路一段371號B1',
-            addressLocality: '新竹市',
-            addressRegion: 'TW',
-            postalCode: '300'
-        }
-      },
-      alumniOf: { 
-        '@type': 'EducationalOrganization', 
-        name: '國立台灣大學醫學系' 
-      },
-      medicalSpecialty: [
-        'Physiotherapy', 
-        'SportsMedicine', 
-        'Musculoskeletal'
-      ],
-      sameAs: [
+      // 醫師實體唯一識別連結 (SameAs)：修正 URL 編碼確保 100% 爬取成功
+      'sameAs': [
         'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
         'https://www.pmr.org.tw/associator/associator-all.asp?w/',
         'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
       ],
-      hasCredential: [
-        // 1. 衛生福利部 - 醫師執照
+      // 專業證照 (Credentials)：GEO (AI 搜尋) 判斷可信度的鐵證
+      'hasCredential': [
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '醫事人員執業資格',
@@ -117,7 +93,6 @@ export default function DoctorsPage() {
             'name': '中華民國衛生福利部'
           }
         },
-        // 2. 復健醫學會 - 復健專科
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '復健科專科醫師資格',
@@ -128,7 +103,6 @@ export default function DoctorsPage() {
             'name': '台灣復健醫學會'
           }
         },
-        // 3. 骨質疏鬆症學會 - 骨鬆專科 (新增)
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '骨質疏鬆症學會專科醫師資格',
@@ -140,9 +114,80 @@ export default function DoctorsPage() {
           }
         }
       ]
+    },
+  
+    // 2. 發佈者區塊 (Publisher)：標註為正式醫療機構
+    'publisher': {
+      '@type': 'MedicalClinic',
+      'name': '宸新復健科診所',
+      'url': SITE_URL,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${SITE_URL}/logo.webp`
+      },
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': '光復路一段371號B1',
+        'addressLocality': '新竹市',
+        'addressRegion': '東區',
+        'postalCode': '300',
+        'telephone': '+886-3-5647999',
+        'addressCountry': 'TW'
+      }
+    },
+  
+    // 3. 頁面主要實體 (MainEntity)：將網頁焦點精確錨定在林醫師身上
+    'mainEntity': {
+      '@type': 'Physician',
+      'name': '林羿辰',
+      'jobTitle': '院長',
+      'image': `${SITE_URL}/images/doctor/c.webp`,
+      'description': '台大醫學系畢業，具備復健科專科與骨鬆雙專科醫師資歷。專精超音波導引PRP注射與運動傷害治療。',
+      'telephone': '+886-3-5647999',
+      'priceRange': '$$',
+      'url': `${SITE_URL}/about/doctors`,
+      
+      // 專業技能分類：GEO 搜尋匹配 (AI 推薦關鍵字)
+      'medicalSpecialty': [
+        { '@type': 'MedicalSpecialty', 'name': 'Physical Medicine and Rehabilitation' },
+        { '@type': 'MedicalSpecialty', 'name': 'Sports Medicine' },
+        { '@type': 'MedicalSpecialty', 'name': 'Orthopedics' }
+      ],
+  
+      // 在地服務地點
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': '光復路一段371號B1',
+        'addressLocality': '新竹市',
+        'addressRegion': '東區',
+        'postalCode': '300',
+        'addressCountry': 'TW'
+      },
+      
+      // 醫師隸屬診所
+      'worksFor': {
+        '@type': 'MedicalClinic',
+        'name': '宸新復健科診所',
+        'url': SITE_URL,
+        'telephone': '+886-3-5647999',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': '光復路一段371號B1',
+          'addressLocality': '新竹市',
+          'addressRegion': '東區',
+          'postalCode': '300',
+          'addressCountry': 'TW'
+        }
+      },
+  
+      // 地理座標：強化 Google Map 關聯與 Local SEO
+      'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': '24.7833314', 
+        'longitude': '121.0170937'
+      }
     }
   }
-
   // ✨ 新增 FAQ 的 JSON-LD 結構化資料，大幅提升 Google SGE 與 AI 抓取機率
   const jsonLdFAQPage = {
     '@context': 'https://schema.org',
@@ -331,13 +376,13 @@ export default function DoctorsPage() {
     {/* 容器使用 items-end 讓直橫混合時齊底對齊，視覺更穩重 */}
     <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-slate-800 snap-x items-end">
       {[
-        { src: '/images/doctor/certificate/certificate-1.webp', alt: '林羿辰醫師 - 中華民國復健科專科醫師證書', label: '復健科專科醫師證書', isPortrait: true },
-        { src: '/images/doctor/certificate/certificate-7.webp', alt: '林羿辰醫師 - 中華民國骨鬆專科醫師證書', label: '骨鬆專科醫師證書', isPortrait: false},
-        { src: '/images/doctor/certificate/certificate-2.webp', alt: '林羿辰醫師 - 國立台灣大學醫學系成績優良獎狀', label: '台大醫學成績優良獎', isPortrait: false },
-        { src: '/images/doctor/certificate/certificate-3.webp', alt: '林羿辰醫師 - 美國運動醫學會 ACE-CPT 國際私人教練證照', label: 'ACE-CPT 國際教練證照', isPortrait: false },
-        { src: '/images/doctor/certificate/certificate-4.webp', alt: '林羿辰醫師 - 國立台灣大學醫學系畢業證書', label: '台大醫學系畢業證書', isPortrait: false },
-        { src: '/images/doctor/certificate/certificate-5.webp', alt: '林羿辰醫師 - 肌肉骨骼超音波訓練認證證書', label: '超音波認證', isPortrait: true },
-        { src: '/images/doctor/certificate/certificate-6.webp', alt: '林羿辰醫師 - 中華民國醫師證書', label: '醫師證書', isPortrait: true },
+        { src: '/images/doctor/certificate/certificate1.webp', alt: '林羿辰醫師 - 中華民國復健科專科醫師證書', label: '復健科專科醫師證書', isPortrait: true },
+        { src: '/images/doctor/certificate/certificate7.webp', alt: '林羿辰醫師 - 中華民國骨鬆專科醫師證書', label: '骨鬆專科醫師證書', isPortrait: false},
+        { src: '/images/doctor/certificate/certificate2.webp', alt: '林羿辰醫師 - 國立台灣大學醫學系成績優良獎狀', label: '台大醫學成績優良獎', isPortrait: false },
+        { src: '/images/doctor/certificate/certificate3.webp', alt: '林羿辰醫師 - 美國運動醫學會 ACE-CPT 國際私人教練證照', label: 'ACE-CPT 國際教練證照', isPortrait: false },
+        { src: '/images/doctor/certificate/certificate4.webp', alt: '林羿辰醫師 - 國立台灣大學醫學系畢業證書', label: '台大醫學系畢業證書', isPortrait: false },
+        { src: '/images/doctor/certificate/certificate5.webp', alt: '林羿辰醫師 - 肌肉骨骼超音波訓練認證證書', label: '超音波認證', isPortrait: true },
+        { src: '/images/doctor/certificate/certificate6.webp', alt: '林羿辰醫師 - 中華民國醫師證書', label: '醫師證書', isPortrait: true },
       ].map((cert, index) => (
         /* 使用 figure 標籤封裝圖片與說明 */
         <figure key={index} className={`flex-shrink-0 snap-center ${cert.isPortrait ? 'w-[180px] md:w-[220px]' : 'w-[260px] md:w-[320px]'}`}>

@@ -100,13 +100,21 @@ export default function DiseaseDetailPage({ params }: PageProps) {
     '@type': 'MedicalWebPage',
     '@id': `${currentPageUrl}#webpage`,
     url: currentPageUrl,
-    name: `${disease.title} - 疾病衛教`,
+    // 強化標題，結合專業品牌詞
+    name: `${disease.title} - 專業疾病衛教與復健治療 | 宸新復健科診所`,
     description: disease.seoDescription || disease.description,
+    
+    // 時效性控制：GEO 引擎判斷內容新鮮度的核心
+    datePublished: '2026-01-25',
+    dateModified: disease.lastModified || '2026-02-25',
+    
+    // 1. 作者 (Author)：強調醫師個人的權威背景
     author: {
       '@type': 'Physician',
-      name: '林羿辰醫師',
-      url: SITE_URL,
+      name: '林羿辰 醫師',
+      url: `${SITE_URL}/about/doctors`,
       jobTitle: '院長',
+      image: `${SITE_URL}/images/main/a.webp`,
       address: {
         '@type': 'PostalAddress',
         streetAddress: '光復路一段371號B1',
@@ -115,9 +123,11 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         postalCode: '300',
         addressCountry: 'TW',
       },
+      // 機構隸屬關係
       affiliation: {
           '@type': 'MedicalClinic',
           name: '宸新復健科診所',
+          url: SITE_URL,
           address: {
             '@type': 'PostalAddress',
             streetAddress: '光復路一段371號B1',
@@ -127,21 +137,24 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             addressCountry: 'TW',
           }
       },
+      // 學歷背景
       alumniOf: {
         '@type': 'EducationalOrganization',
         name: '國立台灣大學醫學系'
       },
+      // 醫學專長
       medicalSpecialty: [
-        'Physical Medicine and Rehabilitation',
-        'SportsMedicine'
+        { '@type': 'MedicalSpecialty', 'name': 'Physical Medicine and Rehabilitation' },
+        { '@type': 'MedicalSpecialty', 'name': 'Sports Medicine' }
       ],
+      // 醫師實體唯一性識別連結 (SameAs)
       sameAs: [
         'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
         'https://www.pmr.org.tw/associator/associator-all.asp?w/',
         'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
       ],
+      // 專業證照 (Credentials)
       hasCredential: [
-        // 1. 衛生福利部 - 醫師執照
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '醫事人員執業資格',
@@ -152,7 +165,6 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             'name': '中華民國衛生福利部'
           }
         },
-        // 2. 復健醫學會 - 復健專科
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '復健科專科醫師資格',
@@ -163,7 +175,6 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             'name': '台灣復健醫學會'
           }
         },
-        // 3. 骨質疏鬆症學會 - 骨鬆專科 (新增)
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '骨質疏鬆症學會專科醫師資格',
@@ -176,9 +187,12 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         }
       ]
     },
+  
+    // 2. 審閱者 (ReviewedBy)：醫療 YMYL 內容加分項
     reviewedBy: {
       '@type': 'Physician',
-      name: '林羿辰醫師',
+      name: '林羿辰 醫師',
+      url: `${SITE_URL}/about/doctors`,
       address: {
         '@type': 'PostalAddress',
         streetAddress: '光復路一段371號B1',
@@ -187,21 +201,13 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         postalCode: '300',
         addressCountry: 'TW',
       },
-      alumniOf: {
-        '@type': 'EducationalOrganization',
-        name: '國立台灣大學醫學系'
-      },
-      medicalSpecialty: [
-        'Physical Medicine and Rehabilitation',
-        'SportsMedicine'
-      ],
       sameAs: [
         'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
         'https://www.pmr.org.tw/associator/associator-all.asp?w/',
         'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
       ],
+      // 專業證照 (Credentials)
       hasCredential: [
-        // 1. 衛生福利部 - 醫師執照
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '醫事人員執業資格',
@@ -212,7 +218,6 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             'name': '中華民國衛生福利部'
           }
         },
-        // 2. 復健醫學會 - 復健專科
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '復健科專科醫師資格',
@@ -223,7 +228,6 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             'name': '台灣復健醫學會'
           }
         },
-        // 3. 骨質疏鬆症學會 - 骨鬆專科 (新增)
         {
           '@type': 'EducationalOccupationalCredential',
           'name': '骨質疏鬆症學會專科醫師資格',
@@ -236,9 +240,12 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         }
       ]
     },
+  
+    // 3. 發佈者 (Publisher)：標註為正式醫療診所
     publisher: {
         '@type': 'MedicalClinic',
         name: '宸新復健科診所',
+        url: SITE_URL,
         logo: {
             '@type': 'ImageObject',
             url: `${SITE_URL}/images/logo.webp`
@@ -250,23 +257,38 @@ export default function DiseaseDetailPage({ params }: PageProps) {
           addressRegion: '東區',
           postalCode: '300',
           addressCountry: 'TW',
+        },
+        'telephone': '+886-3-5647999',
+        'geo': {
+          '@type': 'GeoCoordinates',
+          'latitude': '24.7833314', 
+          'longitude': '121.0170937'
         }
     },
+  
+    // 4. 疾病主體 (MainEntity)：將網頁內容轉化為結構化醫學實體
     mainEntity: {
       '@type': 'MedicalCondition',
       name: disease.title,
       description: disease.seoDescription || disease.description,
-      possibleTreatment: disease.treatments.map(t => ({
-        '@type': 'MedicalTherapy',
-        name: t.replace(/<[^>]*>?/gm, '') 
-      })),
+      // 症狀 (自動從資料庫映射)
       signOrSymptom: disease.symptoms.map(s => ({
         '@type': 'MedicalSymptom',
         name: s
       })),
+      // 建議療程 (自動從資料庫映射，並過濾 HTML 標籤)
+      possibleTreatment: disease.treatments.map(t => ({
+        '@type': 'MedicalTherapy',
+        name: t.replace(/<[^>]*>?/gm, '') 
+      })),
+      // 指導醫學分類
+      associatedAnatomy: {
+        '@type': 'AnatomicalStructure',
+        'name': 'Musculoskeletal System (肌肉骨骼系統)'
+      }
     }
-  }
-
+  };
+  
   return (
     <>
       <JsonLd data={jsonLdBreadcrumb} />

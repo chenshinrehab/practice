@@ -72,46 +72,164 @@ export default function CaseDetailPage({ params }: PageProps) {
   // 2. Schema (優化：使用完整 Logo 網址)
   const jsonLdData = {
     '@context': 'https://schema.org',
+    // 使用 MedicalScholarlyArticle 非常正確，這能告訴 Google 這是具備學術價值的臨床案例
     '@type': 'MedicalScholarlyArticle',
     'genre': 'Case Report',
     '@id': `${currentUrl}#case-study`,
-    url: currentUrl,
-    headline: post.title,
-    image: [post.coverImage],
-    datePublished: post.date,
-    dateModified: post.date,
-    author: { 
-        '@type': 'Person', 
-        name: '林羿辰醫師',
-        url: `${SITE_URL}/about/doctors`
-    },
-    publisher: { 
-        '@type': 'MedicalOrganization', 
-        name: '新竹宸新復健科診所',
-        telephone: '+886-3-564-7999',
-        priceRange: '$$', 
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: '光復路一段371號B1',
-          addressLocality: '新竹市',
-          addressRegion: '東區',
-          postalCode: '300',
-          addressCountry: 'TW',
+    'url': currentUrl,
+    'headline': post.title,
+    'image': [post.coverImage || `${SITE_URL}/images/main/a.webp`],
+    'description': post.summary,
+    
+    // 時效性優化：AI 搜尋非常看重內容更新日期
+    'datePublished': '2026-01-25',
+    'dateModified':  post.date || '2026-02-25',
+  
+    // 1. 作者強化 (EEAT 核心)：將 Person 提升為 Physician 並加入證照與外部連結
+    'author': {
+      '@type': 'Physician',
+      'name': '林羿辰 醫師',
+      'jobTitle': '宸新復健科診所 院長',
+      'url': `${SITE_URL}/about/doctors`,
+      'image': `${SITE_URL}/images/main/a.webp`,
+      'alumniOf': {
+        '@type': 'EducationalOrganization',
+        'name': '國立台灣大學醫學系'
+      },
+      'medicalSpecialty': [
+        { '@type': 'MedicalSpecialty', 'name': 'Physical Medicine and Rehabilitation' },
+        { '@type': 'MedicalSpecialty', 'name': 'Sports Medicine' }
+      ],
+      // 建立實體關聯，讓 Google 確認醫師的真實權威性
+      'sameAs': [
+        'hhttps://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+        'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+        'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
+      ],
+      // 醫師證照：GEO 判定「醫療事實」的重要依據
+      'hasCredential': [
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '醫事人員執業資格',
+          'credentialCategory': '醫師證書',
+          'url': 'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '中華民國衛生福利部'
+          }
         },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: '24.7833314', 
-          longitude: '121.0170937'
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '復健科專科醫師資格',
+          'credentialCategory': '復健科專科醫師證書',
+          'url': 'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '台灣復健醫學會'
+          }
         },
-        logo: {
-            '@type': 'ImageObject',
-            url: `${SITE_URL}/logo.webp`
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '骨質疏鬆症學會專科醫師資格',
+          'credentialCategory': '骨質疏鬆症學會專科醫師證書',
+          'url': 'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a=',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '中華民國骨質疏鬆症學會'
+          }
         }
+      ]
     },
-    description: post.summary,
-    about: {
+  
+    // 2. 發佈者 (Publisher)：強化診所在地的權威與聯絡資訊
+    'publisher': { 
+      '@type': 'MedicalClinic', // 比 MedicalOrganization 更精確
+      'name': '宸新復健科診所',
+      'alternateName': 'Chenshin Rehabilitation Clinic',
+      'telephone': '+886-3-564-7999',
+      'priceRange': '$$', 
+      'url': SITE_URL,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${SITE_URL}/logo.webp`
+      },
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': '光復路一段371號B1',
+        'addressLocality': '新竹市',
+        'addressRegion': '東區',
+        'postalCode': '300',
+        'addressCountry': 'TW',
+      },
+      'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': '24.7833314', 
+        'longitude': '121.0170937'
+      },
+      // 地區權重：幫助新竹、竹北、竹科的病患搜尋到此案例
+      'areaServed': [
+        { "@type": "City", "name": "新竹市" },
+        { "@type": "City", "name": "竹北市" },
+        { "@type": "Place", "name": "新竹科學園區" },
+        { "@type": "AdministrativeArea", "name": "新竹縣" }
+      ],
+      sameAs: [
+        'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+        'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+        'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a='
+      ],
+      // 專業證照 (Credentials)
+      hasCredential: [
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '醫事人員執業資格',
+          'credentialCategory': '醫師證書',
+          'url': 'https://ma.mohw.gov.tw/Accessibility/DOCSearch/DOCBasicData?DOC_SEQ=2bJQOvvE5EX3U6eK7eSvhw%253D%253D',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '中華民國衛生福利部'
+          }
+        },
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '復健科專科醫師資格',
+          'credentialCategory': '復健科專科醫師證書',
+          'url': 'https://www.pmr.org.tw/associator/associator-all.asp?w/',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '台灣復健醫學會'
+          }
+        },
+        {
+          '@type': 'EducationalOccupationalCredential',
+          'name': '骨質疏鬆症學會專科醫師資格',
+          'credentialCategory': '骨質疏鬆症學會專科醫師證書',
+          'url': 'https://www.toa1997.org.tw/orthopedist/?n=%E6%9E%97%E7%BE%BF%E8%BE%B0&h=&c=&a=',
+          'recognizedBy': {
+            '@type': 'Organization',
+            'name': '中華民國骨質疏鬆症學會'
+          }
+        }
+      ]
+    },
+  
+    // 3. 案例主題強化 (About)：連結具體的疾病與治療方式
+    'about': [
+      {
         '@type': 'MedicalCondition',
         name: post.tags && post.tags.length > 0 ? post.tags[0] : '慢性疼痛'
+      },
+      {
+        '@type': 'MedicalTherapy',
+        'name': '增生療法 (Prolotherapy) / 超音波導引注射'
+      }
+    ],
+  
+    // 4. 關鍵屬性：標註這是針對人類的醫學研究
+    'audience': {
+      '@type': 'MedicalAudience',
+      'audienceType': 'Patients',
+      'geographicArea': { '@type': 'City', 'name': '新竹' }
     }
   }
 
@@ -162,19 +280,37 @@ export default function CaseDetailPage({ params }: PageProps) {
                   {/* Header */}
                   <header className="mb-8 border-b border-slate-700/50 pb-6">
                       <div className="flex-grow">
-                          <div className="flex flex-wrap items-center gap-3 mb-4">
-                              <span className="px-3 py-1 rounded-full text-xs font-bold border tracking-wider uppercase bg-cyan-500/10 text-cyan-400 border-cyan-500/30">
-                                {post.category}
-                              </span>
-                              <span className="text-slate-500 text-xs flex items-center">
-                                <i className="fa-regular fa-calendar mr-2"></i>{post.date}
-                              </span>
-                          </div>
+
+
 
                           <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-sans text-white mb-4 lg:mb-6 leading-tight lg:leading-snug">
                               {post.title}
                           </h1>
 
+                          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 w-full">
+  {/* 左側：分類標籤與撰文者 */}
+  <div className="flex items-center gap-3">
+    <span className="px-3 py-1 rounded-full text-sm font-bold border tracking-wider uppercase bg-cyan-500/10 text-cyan-400 border-cyan-500/30">
+      {post.category}
+    </span>
+    
+    <span className="text-slate-400 text-sm flex items-center">
+      撰文者：
+      <Link 
+        href="/about/doctors" 
+        className="text-slate-300 hover:text-cyan-400 underline underline-offset-4 decoration-slate-600 transition-colors"
+      >
+        林羿辰醫師
+      </Link>
+    </span>
+  </div>
+
+  {/* 右側：最後更新日期 */}
+  <span className="text-slate-300 text-sm flex items-center bg-slate-700/50 px-3 py-1 rounded-full border border-slate-600">
+    <i className="fa-regular fa-calendar mr-2"></i>
+    最後更新日期：{post.date}
+  </span>
+</div>
                           <div className="bg-slate-900/50 rounded-xl p-4 md:p-4 border-l-4 border-cyan-500">
                               <div className="flex items-start gap-3">
                                 <i className="fa-solid fa-user-doctor text-cyan-500 mt-1"></i>
@@ -208,11 +344,64 @@ export default function CaseDetailPage({ params }: PageProps) {
                      </div>
                   )}
 
-                  {/* 撰文者資訊 */}
-                  <div className="text-right mt-0 pb-4 pr-2">
-                    <div className="inline-block text-slate-500 text-[11px] md:text-xs space-y-0.5">
-                      <p><span className="mr-2">撰文者 :</span><span className="font-medium text-slate-400">復健專科 宸新復健科院長 林羿辰醫師</span></p>
-                      <p><span className="mr-2">資料來源 :</span><span className="font-medium text-slate-400">宸新復健科診所內部案例</span></p>
+            {/* 修正 4：醫師資歷方塊 (將 animate-on-scroll 移除或改為即時顯示確保穩定性) */}
+                
+            <div className="mt-8 mb-10">
+                    <div className="bg-slate-800/40 backdrop-blur border border-slate-700 rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+                      
+                      <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10">
+                        <div className="flex-grow text-center md:text-left">
+                          <div className="mb-2">
+                          <h3 className="text-xl font-bold text-white flex flex-col md:flex-row items-center gap-2">
+  本文由 
+  <Link 
+    href="/about/doctors"
+    className="text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer underline underline-offset-4 decoration-cyan-900/50 hover:decoration-cyan-400"
+  >
+    林羿辰醫師
+  </Link> 
+  撰寫與醫學審閱
+  <span className="hidden md:inline-block text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30 font-normal uppercase tracking-wider">
+    Verified Expert
+  </span>
+</h3>
+                            <p className="text-sm text-slate-400 mt-1 font-medium">宸新復健科診所院長 / 復健科專科醫師</p>
+                          </div>
+                          
+                          <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                            現任宸新復健科診所院長。畢業於國立台灣大學醫學系，擁有復健科、骨質疏鬆雙專科醫師資歷，專精於精準超音波導引注射治療、增生療法與各類運動傷害。林醫師具備豐富臨床經驗，致力於將醫學實證應用於病患康復。
+                          </p>
+
+                          <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-5 border-t border-slate-700/50">
+                            <Link 
+                              href="/about/doctors" 
+                              className="text-cyan-400 hover:text-cyan-300 text-sm font-bold flex items-center group transition-colors cursor-pointer"
+                            >
+                              <i className="fa-solid fa-id-card-clip mr-2 text-lg"></i>
+                              <span className="border-b border-cyan-500/30 group-hover:border-cyan-300">👉 查看更多醫師資歷、證照認證與學術論文</span>
+                              <i className="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                            </Link>
+                            
+                            <div className="flex flex-col items-end gap-1 text-[10px] md:text-xs text-slate-500">
+                              <div className="flex items-center gap-3">
+                                <span className="flex items-center"><i className="fa-solid fa-check-double mr-1 text-cyan-500/70"></i> 專家審閱完成</span>
+                                <span className="flex items-center"><i className="fa-solid fa-database mr-1 text-cyan-500/70"></i> 來源：醫學實證與專科臨床</span>
+                              </div>
+                              <div className="text-gray-500">
+                                最後更新日期：
+                                {post.date ? (
+                                  <time dateTime={post.date} itemProp="dateModified">
+                                    {post.date}
+                                  </time>
+                                ) : (
+                                  "2026-02-22"
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
