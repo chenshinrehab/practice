@@ -121,7 +121,7 @@ export default function BookingPage() {
             </h2>
             <div className="relative w-full flex-grow rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center border border-slate-100 min-h-[300px]">
               <img 
-                src="/images/booking.png" 
+                src="/images/booking.webp" 
                 alt="預約流程教學" 
                 className="w-full h-auto object-contain rounded-2xl"
               />
