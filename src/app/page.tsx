@@ -32,7 +32,7 @@ export default function Home() {
     // 設定新的計時器：5 秒切換一次
     timerRef.current = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % countries.length);
-    }, 5000); 
+    }, 3000); 
 
     // 組件卸載時清除計時器，防止記憶體洩漏與亂跳
     return () => {
@@ -88,13 +88,18 @@ export default function Home() {
             {/* 🟢 修改後的自動輪播圖片區塊 */}
             <div className="md:w-1/2 relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden shadow-xl border-[12px] border-white shadow-slate-200/50 group bg-white">
               <Link href={`/europe/${currentCountry.id}`}>
-                <AnimatePresence mode="wait">
+                <AnimatePresence initial={false}>
                   <motion.div
                     key={currentCountry.id}
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }} 
+                    animate={{ 
+                      opacity: 1,
+                      transition: { duration: 2.5, ease: "easeOut" } // 🟢 出現速度變慢 (輕柔浮現)
+                    }}
+                    exit={{ 
+                      opacity: 0,
+                      transition: { duration: 1.0, ease: "easeIn" }  // 🟢 消失速度變快 (俐落退場)
+                    }}
                     className="relative w-full h-full"
                   >
                     <Image 

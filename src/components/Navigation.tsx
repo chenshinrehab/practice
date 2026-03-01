@@ -57,8 +57,7 @@ export default function Navigation() {
             { name: '義大利深度旅遊', path: '/europe/italy' },
             { name: '瑞士優美絕境', path: '/europe/switzerland' },
             { name: '德法經典之旅', path: '/europe/franceGermany' },
-            { name: '中歐奧捷匈巡禮', path: '/europe/centraleurope' },
-            { name: '葡西歷史巡禮', path: '/europe/spainPortugal' }
+            { name: '中歐奧捷匈巡禮', path: '/europe/centraleurope' }
         ]
     },
   ];
